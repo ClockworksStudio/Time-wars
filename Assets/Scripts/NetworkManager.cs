@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject playerPrefab;
 	public string roomName = "Server Name:";
+	public int maxPlayerNum = 5;
 
 	private RoomInfo[] roomsList;
 
@@ -17,7 +19,7 @@ public class NetworkManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-	
+
 	}
 
 	void OnGUI()
@@ -28,12 +30,18 @@ public class NetworkManager : MonoBehaviour {
 		}
 		else if (PhotonNetwork.room == null)
 		{
-			GUI.Label(new Rect(100, 50, 250, 20), "Server Name:");
-			roomName = GUI.TextField(new Rect(100, 70, 250, 20), roomName, 25);
+			GUI.Label(new Rect(100, 10, 250, 20), "Server Name:");
+			roomName = GUI.TextField(new Rect(100, 30, 250, 20), roomName, 20);
+			//GUI.Label(new Rect(100, 50, 250, 20), "Max Players:");
+			//maxPlayerNum = int.Parse(GUI.TextField(new Rect(100, 70, 250, 20), maxPlayerNum.ToString(), 2));
+			//Regex.Replace(maxPlayerNum.ToString(), @"[^0-9 ]", "");
+
+
 			// Create Room
 			if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
 			{
-				PhotonNetwork.CreateRoom(roomName, true, true, 5);
+				RoomOptions roomOptions = new RoomOptions() { isOpen = true, isVisible = true, maxPlayers = maxPlayerNum};
+				PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
 			}
 			
 			// Join Room
